@@ -4,6 +4,7 @@ import contextlib
 import logging
 import os
 import re
+import shlex
 import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -48,6 +49,7 @@ if TYPE_CHECKING:
     from windows.main_window import BlenderLauncher
 
 logger = logging.getLogger()
+
 
 class LibraryWidget(BaseBuildWidget):
     initialized = pyqtSignal()
@@ -441,62 +443,14 @@ class LibraryWidget(BaseBuildWidget):
             self.build_state_widget.setNewBuild(False)
             self.show_new = False
 
-        platform = get_platform()
-        library_folder = Path(get_library_folder())
-        blender_args = get_blender_startup_arguments()
-
         proc = None
-
-        b3d_exe: Path
-        args: str | list[str] = ""
-        if platform == "Windows":
-            if exe is not None:
-                b3d_exe = library_folder / self.link / exe
-                args = ["cmd /C", b3d_exe.as_posix()]
-            else:
-                cexe = self.build_info.custom_executable
-                if cexe:
-                    b3d_exe = library_folder / self.link / cexe
-                else:
-                    if (
-                        get_launch_blender_no_console()
-                        and (library_folder / self.link / "blender-launcher.exe").exists()
-                    ):
-                        b3d_exe = library_folder / self.link / "blender-launcher.exe"
-                    else:
-                        b3d_exe = library_folder / self.link / "blender.exe"
-
-                if blender_args == "":
-                    args = b3d_exe.as_posix()
-                else:
-                    args = [b3d_exe.as_posix(), *blender_args.split(" ")]
-
-        elif platform == "Linux":
-            bash_args = get_bash_arguments()
-
-            if bash_args != "":
-                bash_args += " "
-            bash_args += "nohup"
-
-            cexe = self.build_info.custom_executable
-            if cexe:
-                b3d_exe = library_folder / self.link / cexe
-            else:
-                b3d_exe = library_folder / self.link / "blender"
-
-            args = f'{bash_args} "{b3d_exe.as_posix()}" {blender_args}'
+        args = self.get_basic_args(exe)
 
         if blendfile is not None:
-            if isinstance(args, list):
-                args.append(blendfile.as_posix())
-            else:
-                args += f' "{blendfile.as_posix()}"'
+            args.append(shlex.quote(blendfile.as_posix()))
 
         if open_last:
-            if isinstance(args, list):
-                args.append("--open-last")
-            else:
-                args += " --open-last"
+            args.append("--open-last")
 
         logger.debug("Running build with args %s", str(args))
         proc = _popen(args)
@@ -509,6 +463,41 @@ class LibraryWidget(BaseBuildWidget):
             self.observer.start()
 
         self.observer.append_proc.emit(proc)
+
+    def get_basic_args(self, exe=None):
+        args: list[str | Path] = []
+        platform = get_platform()
+        library_folder = Path(get_library_folder())
+        blender_args_ = get_blender_startup_arguments()
+        if platform == "Windows":
+            blender_args = shlex.split(blender_args_, posix=False)
+            args.extend(["cmd", "/C"])
+            if exe is not None:
+                b3d_exe = library_folder / self.link / exe
+            elif self.build_info is not None and (cexe := self.build_info.custom_executable) is not None:
+                b3d_exe = cexe
+            elif (
+                get_launch_blender_no_console()
+                and (launcher_exe := (library_folder / self.link / "blender-launcher.exe")).exists()
+            ):
+                b3d_exe = launcher_exe
+            else:
+                b3d_exe = library_folder / self.link / "blender.exe"
+            args.append(b3d_exe)
+            args.extend(blender_args)
+        else:
+            blender_args = shlex.split(blender_args_, posix=True)
+            bash_args = get_bash_arguments()
+            args.extend(bash_args)
+
+            if self.build_info is not None and (cexe := self.build_info.custom_executable) is not None:
+                b3d_exe = library_folder / self.link / cexe
+            else:
+                b3d_exe = library_folder / self.link / "blender"
+            args.append(shlex.quote(str(b3d_exe)))
+            args.extend(blender_args)
+
+        return args
 
     def proc_count_changed(self, count):
         self.build_state_widget.setCount(count)

@@ -1,6 +1,9 @@
+import logging
 from subprocess import Popen
 
 from PyQt5.QtCore import QThread, pyqtSignal
+
+logger = logging.getLogger()
 
 
 class Observer(QThread):
@@ -10,25 +13,25 @@ class Observer(QThread):
     def __init__(self, parent):
         QThread.__init__(self)
         self.parent = parent
-        self.processes = []
+        self.processes: list[Popen] = []
         self.append_proc.connect(self.handle_append_proc)
 
     def run(self):
+        old_proc_count = len(self.processes)
         while self.parent:
             for proc in self.processes:
                 if proc.poll() is not None:
-                    proc.kill()
+                    logger.debug(f"Process {proc.args} exited with code {proc.returncode}")
+                    proc.terminate()
                     self.processes.remove(proc)
-                    proc_count = len(self.processes)
 
-                    if proc_count > 0:
-                        self.count_changed.emit(proc_count)
-                    else:
-                        return
+            if (p := len(self.processes)) != old_proc_count:
+                self.count_changed.emit(p)
+                old_proc_count = p
+                if p == 0:
+                    break
 
             QThread.sleep(1)
-
-        return
 
     def handle_append_proc(self, proc):
         self.processes.append(proc)

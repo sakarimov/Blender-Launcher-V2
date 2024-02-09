@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shlex
 from typing import TypedDict
 
 import distro
@@ -122,7 +123,7 @@ class BlenderLauncherUpdater(BaseWindow):
             _popen([launcher])
         elif self.platform == "Linux":
             os.chmod(dist, 0o744)
-            _popen('nohup "' + launcher + '"')
+            _popen(["nohup", shlex.quote(launcher)])
 
         self.app.quit()
 

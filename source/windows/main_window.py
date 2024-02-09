@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import re
+import shlex
 import webbrowser
 from datetime import datetime, timezone
 from enum import Enum
@@ -540,7 +541,7 @@ class BlenderLauncher(BaseWindow):
             _popen([dist.as_posix(), "-update", self.latest_tag])
         elif self.platform == "Linux":
             os.chmod(dist.as_posix(), 0o744)
-            _popen(f'nohup "{dist.as_posix()}" -update {self.latest_tag}')
+            _popen(["nohup", shlex.quote(str(dist)), "-update", self.latest_tag])
 
         # Destroy currently running Blender Launcher instance
         self.server.close()
@@ -986,6 +987,6 @@ class BlenderLauncher(BaseWindow):
         elif self.platform == "Linux":
             exe = (cwd / "Blender Launcher").as_posix()
             os.chmod(exe, 0o744)
-            _popen('nohup "' + exe + '" -instanced')
+            _popen(["nohup", shlex.quote(exe), "-instanced"])
 
         self.destroy()

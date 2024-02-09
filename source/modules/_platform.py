@@ -59,7 +59,6 @@ def _popen(args):
         DETACHED_PROCESS = 0x00000008
         return Popen(
             args,
-            shell=True,
             stdin=None,
             stdout=None,
             stderr=None,
@@ -70,11 +69,10 @@ def _popen(args):
 
     return Popen(
         args,
-        shell=True,
-        stdout=None,
-        stderr=None,
+        stdout=PIPE,
+        stderr=PIPE,
         close_fds=True,
-        preexec_fn=os.setpgrp,  # type: ignore
+        start_new_session=True,
         env=get_environment(),
     )
 
