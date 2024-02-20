@@ -438,24 +438,24 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#building-blender-launcher-executable" class="md-nav__link">
-    <span class="md-ellipsis">
-      Building Blender Launcher executable
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-documentation" class="md-nav__link">
+  <a href="#running-blender-launcher" class="md-nav__link">
     <span class="md-ellipsis">
-      Building Documentation
+      Running Blender Launcher
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-blender-launcher-executable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building Blender Launcher executable
     </span>
   </a>
   
@@ -523,24 +523,24 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#building-blender-launcher-executable" class="md-nav__link">
-    <span class="md-ellipsis">
-      Building Blender Launcher executable
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-documentation" class="md-nav__link">
+  <a href="#running-blender-launcher" class="md-nav__link">
     <span class="md-ellipsis">
-      Building Documentation
+      Running Blender Launcher
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-blender-launcher-executable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building Blender Launcher executable
     </span>
   </a>
   
@@ -587,6 +587,17 @@
 </code></pre></div>
 </li>
 <li>
+<p>Create the virtual environment</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>virtualenv
+python<span class="w"> </span>-m<span class="w"> </span>virtualenv<span class="w"> </span>--clear<span class="w"> </span>--download<span class="w"> </span>.venv
+python<span class="w"> </span>-m<span class="w"> </span>ensurepip
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pdm
+<span class="c1"># Enter the virtual Environment</span>
+pdm<span class="w"> </span>venv<span class="w"> </span>activate<span class="w"> </span>.venv
+<span class="c1"># ^ Execute the command this returns with!</span>
+</code></pre></div>
+</li>
+<li>
 <p>Install dependencies</p>
 <div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Minimum set of packages for building executable</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code>pip install -e .
@@ -598,13 +609,15 @@
 </div>
 </div>
 </li>
-<li>
-<p>Enter the virtual environment</p>
-<div class="highlight"><pre><span></span><code>pdm venv activate
-</code></pre></div>
-</li>
 </ol>
-<h3 id="building-blender-launcher-executable">Building Blender Launcher executable<a class="headerlink" href="#building-blender-launcher-executable" title="Permanent link">&para;</a></h3>
+<h2 id="running-blender-launcher">Running Blender Launcher<a class="headerlink" href="#running-blender-launcher" title="Permanent link">&para;</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>As of (<a href="https://github.com/Victor-IX/Blender-Launcher-V2/commit/c90f33dfb710da509e50932bae3cbe5b588d8688">c90f33d</a>), cached Blender-Launcher-V2 files (such as resources_rc.py and global.qss) are no longer included in the source due to them artificially inflating git diffs. In order to generate them, run the <code>build_style.py</code> script located in the root project directory. running Blender Launcher without these being built will result in an error.</p>
+</div>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>source/main.py
+</code></pre></div>
+<h2 id="building-blender-launcher-executable">Building Blender Launcher executable<a class="headerlink" href="#building-blender-launcher-executable" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Executables made in Pyinstaller must be built inside the target platform! You cannot build for a different platform other than your own.</p>
@@ -632,16 +645,6 @@
 <p>Look for bundled app under <code>Blender-Launcher-V2\dist\release</code> folder</p>
 </li>
 </ol>
-</div>
-</div>
-<h2 id="building-documentation">Building Documentation<a class="headerlink" href="#building-documentation" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">Windows</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code>cd docs ; mkdocs gh-deploy ; cd ..
-</code></pre></div>
-</div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">Linux</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code>cd docs &amp;&amp; mkdocs gh-deploy ; cd ..
-</code></pre></div>
 </div>
 </div>
 
