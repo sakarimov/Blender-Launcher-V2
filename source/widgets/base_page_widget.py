@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from modules.settings import get_list_sorting_type, set_list_sorting_type
 from PyQt5.QtCore import Qt
@@ -12,6 +13,9 @@ from PyQt5.QtWidgets import (
 )
 from widgets.base_list_widget import BaseListWidget
 
+if TYPE_CHECKING:
+    from modules.icons import Icons
+
 
 class SortingType(Enum):
     DATETIME = 1
@@ -22,7 +26,7 @@ class BasePageWidget(QWidget):
     def __init__(self, parent, page_name, time_label, info_text, show_reload=False, extended_selection=False):
         super().__init__(parent)
         self.name = page_name
-
+        self.icons: Icons = parent.icons
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
@@ -82,6 +86,7 @@ class BasePageWidget(QWidget):
 
         if show_reload is True:
             self.fakeLabel = QPushButton("Reload")
+            self.fakeLabel.setIcon(self.icons.refresh)
             self.fakeLabel.setToolTip("Reload Custom builds from disk")
             self.fakeLabel.setProperty("ListHeader", True)
             self.fakeLabel.clicked.connect(parent.reload_custom_builds)
