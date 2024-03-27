@@ -22,6 +22,10 @@ class VersionSearch:
     def default(cls):
         return cls("^", "^", "^")
 
+    @classmethod
+    def from_str(cls, s: str):
+        return cls(s[0], s[2], s[4])
+
 
 @dataclass(frozen=True)
 class VersionMatcher:

@@ -271,7 +271,7 @@ def read_blender_version(
         blender_exe = {
             "Windows": "blender.exe",
             "Linux": "blender",
-            "macOS": "Blender/Blender.app/Contents/MacOS/Blender",
+            "macOS": "Blender.app/Contents/MacOS/Blender",
         }.get(get_platform(), "blender")
 
         exe_path = path / blender_exe

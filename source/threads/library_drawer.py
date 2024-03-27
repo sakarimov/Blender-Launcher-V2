@@ -20,26 +20,32 @@ class DrawLibraryTask(Task):
     unrecognized = pyqtSignal(Path)
     finished = pyqtSignal()
 
-    def run(self):
+    def get_builds(self)-> Iterable[tuple[bool, Path]]:
         library_folder = Path(get_library_folder())
         platform = get_platform()
-
         blender_exe = {
             "Windows": "blender.exe",
             "Linux": "blender",
-            "macOS": "Blender/Blender.app/Contents/MacOS/Blender",
+            "macOS": "Blender.app/Contents/MacOS/Blender",
         }.get(platform, "blender")
 
         for folder in self.folders:
             path = library_folder / folder
-
             if path.is_dir():
                 for build in path.iterdir():
                     if build.is_dir():
                         if (folder / build / ".blinfo").is_file() or (path / build / blender_exe).is_file():
-                            self.found.emit(folder / build)
+                            yield True, folder / build
                         else:
-                            self.unrecognized.emit(folder / build)
+                            yield False, folder / build
+
+    def run(self):
+        for recognized, build in self.get_builds():
+            if recognized:
+                self.found.emit(build)
+            else:
+                self.unrecognized.emit(build)
+
         self.finished.emit()
 
     def __str__(self):
