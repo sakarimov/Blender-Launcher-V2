@@ -325,11 +325,71 @@
   
   
     <li class="md-nav__item">
+      <a href="../manual_build_installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manual Blender Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build_initialization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Build Initialization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../troubleshooting/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Troubleshooting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../known_issues/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Known Issues
   </span>
   
 
@@ -453,11 +513,53 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-blender-launcher-executable" class="md-nav__link">
+  <a href="#building-blender-launcher-exe" class="md-nav__link">
     <span class="md-ellipsis">
-      Building Blender Launcher executable
+      Building Blender Launcher .exe
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preview-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -538,11 +640,53 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#building-blender-launcher-executable" class="md-nav__link">
+  <a href="#building-blender-launcher-exe" class="md-nav__link">
     <span class="md-ellipsis">
-      Building Blender Launcher executable
+      Building Blender Launcher .exe
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preview-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-the-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish the Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -617,7 +761,7 @@ pdm<span class="w"> </span>venv<span class="w"> </span>activate
 </div>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>source/main.py
 </code></pre></div>
-<h2 id="building-blender-launcher-executable">Building Blender Launcher executable<a class="headerlink" href="#building-blender-launcher-executable" title="Permanent link">&para;</a></h2>
+<h2 id="building-blender-launcher-exe">Building Blender Launcher .exe<a class="headerlink" href="#building-blender-launcher-exe" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Executables made in Pyinstaller must be built inside the target platform! You cannot build for a different platform other than your own.</p>
@@ -642,8 +786,49 @@ pdm<span class="w"> </span>venv<span class="w"> </span>activate
 </code></pre></div>
 </li>
 <li>
-<p>Look for bundled app under <code>Blender-Launcher-V2\dist\release</code> folder</p>
+<p>Look for bundled app under <code>Blender-Launcher-V2/dist/release</code> folder</p>
 </li>
+</ol>
+</div>
+</div>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<h3 id="preview-the-documentation">Preview the Documentation<a class="headerlink" href="#preview-the-documentation" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">Windows</label><div class="tabbed-content"></div>
+</div>
+<ol>
+<li>Run the batch file
+        <div class="highlight"><pre><span></span><code>.\script\mkdocs_serve.bat
+</code></pre></div></li>
+<li><a href="http://127.0.0.1:8000/">Open the Documentation</a> in a web browser.</li>
+</ol>
+<div class="tabbed-set" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">Linux</label><div class="tabbed-content">
+<ol>
+<li>Run the shell script file
+    <div class="highlight"><pre><span></span><code>sh .\script\mkdocs_serve.sh
+</code></pre></div></li>
+<li><a href="http://127.0.0.1:8000/">Open the Documentation</a> in a web browser.</li>
+</ol>
+</div>
+</div>
+<h3 id="update-the-documentation">Update the Documentation<a class="headerlink" href="#update-the-documentation" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Note</p>
+<p>You should never edit the documentation in the gh-pages branch; this branch is used to publish the documentation.</p>
+</div>
+<p>Make the desired modifications in the .md files.</p>
+<h3 id="publish-the-documentation">Publish the Documentation<a class="headerlink" href="#publish-the-documentation" title="Permanent link">&para;</a></h3>
+<div class="tabbed-set" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><label for="__tabbed_5_1">Windows</label><div class="tabbed-content"></div>
+</div>
+<ol>
+<li>Run the batch file
+        <div class="highlight"><pre><span></span><code>.\script\mkdocs_publish.bat
+</code></pre></div></li>
+</ol>
+<div class="tabbed-set" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><label for="__tabbed_6_1">Linux</label><div class="tabbed-content">
+<ol>
+<li>Run the shell script file
+    <div class="highlight"><pre><span></span><code>sh .\script\mkdocs_publish.sh
+</code></pre></div></li>
 </ol>
 </div>
 </div>
@@ -668,7 +853,7 @@ pdm<span class="w"> </span>venv<span class="w"> </span>activate
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2022 Victor Chedeville │ Blender Launcher GPL-3.0 License │ Version 2.0.24
+      Copyright &copy; 2022 Victor Chedeville │ Blender Launcher GPL-3.0 License │ Version 2.1.24
     </div>
   
   
