@@ -103,28 +103,19 @@ def get_environment():
 
 
 def _popen(args):
-    if get_platform() == "Windows":
-        DETACHED_PROCESS = 0x00000008
-        return Popen(
-            args,
-            shell=True,
-            stdin=None,
-            stdout=None,
-            stderr=None,
-            close_fds=True,
-            creationflags=DETACHED_PROCESS,
-            start_new_session=True,
-        )
+    platform = get_platform()
 
-    return Popen(
-        args,
-        shell=True,
-        stdout=None,
-        stderr=None,
-        close_fds=True,
-        preexec_fn=os.setpgrp,  # type: ignore
-        env=get_environment(),
-    )
+    if platform == 'Windows':
+        DETACHED_PROCESS = 0x00000008
+        proc = Popen(args, shell=True, stdin=None, stdout=None, stderr=None,
+                     close_fds=True, creationflags=DETACHED_PROCESS,
+                     start_new_session=True)
+    elif platform == 'Linux':
+        proc = Popen(args, shell=True, stdout=None, stderr=None,
+                     close_fds=True,  preexec_fn=os.setpgrp,
+                     env=get_environment())
+
+    return proc
 
 
 def _check_call(args):

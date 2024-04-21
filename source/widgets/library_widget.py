@@ -166,7 +166,7 @@ class LibraryWidget(BaseBuildWidget):
         self.layout.addWidget(self.build_state_widget)
 
         self.launchButton.clicked.connect(
-            lambda: self.launch(update_selection=True, open_last=self.hovering_and_shifting)
+            lambda: self.launch(update_selection=True)
         )
         self.launchButton.setCursor(Qt.CursorShape.PointingHandCursor)
 
@@ -417,8 +417,7 @@ class LibraryWidget(BaseBuildWidget):
         self.deleteAction.setEnabled(True)
         self.installTemplateAction.setEnabled(True)
 
-    def launch(self, update_selection=False, exe=None, blendfile: Path | None = None, open_last=False):
-        assert self.build_info is not None
+    def launch(self, update_selection=False, exe=None):
         if update_selection is True:
             self.list_widget.clearSelection()
             self.item.setSelected(True)
@@ -435,66 +434,37 @@ class LibraryWidget(BaseBuildWidget):
         library_folder = Path(get_library_folder())
         blender_args = get_blender_startup_arguments()
 
-        proc = None
-
-        b3d_exe: Path
-        args: str | list[str] = ""
-        if platform == "Windows":
+        if platform == 'Windows':
             if exe is not None:
                 b3d_exe = library_folder / self.link / exe
-                args = ["cmd /C", b3d_exe.as_posix()]
+                proc = _popen(['cmd /C', b3d_exe.as_posix()])
             else:
-                cexe = self.build_info.custom_executable
-                if cexe:
-                    b3d_exe = library_folder / self.link / cexe
-                else:
-                    if (
-                        get_launch_blender_no_console()
-                        and (library_folder / self.link / "blender-launcher.exe").exists()
-                    ):
+                if get_launch_blender_no_console():
+                    if Path.exists(library_folder / self.link / "blender-launcher.exe"):
                         b3d_exe = library_folder / self.link / "blender-launcher.exe"
                     else:
                         b3d_exe = library_folder / self.link / "blender.exe"
+                else:
+                    b3d_exe = library_folder / self.link / "blender.exe"
 
                 if blender_args == "":
-                    args = b3d_exe.as_posix()
+                    proc = _popen(b3d_exe.as_posix())
                 else:
-                    args = [b3d_exe.as_posix(), *blender_args.split(" ")]
-
-        elif platform == "Linux":
+                    args = [b3d_exe.as_posix()]
+                    args.extend(blender_args.split(' '))
+                    proc = _popen(args)
+        elif platform == 'Linux':
             bash_args = get_bash_arguments()
 
-            if bash_args != "":
-                bash_args += " "
-            bash_args += "nohup"
-
-            cexe = self.build_info.custom_executable
-            if cexe:
-                b3d_exe = library_folder / self.link / cexe
+            if bash_args != '':
+                bash_args = bash_args + " nohup"
             else:
-                b3d_exe = library_folder / self.link / "blender"
+                bash_args = "nohup"
 
-            args = f'{bash_args} "{b3d_exe.as_posix()}" {blender_args}'
+            b3d_exe = library_folder / self.link / "blender"
+            proc = _popen('{0} "{1}" {2}'.format(
+                bash_args, b3d_exe.as_posix(), blender_args))
 
-        elif platform == "macOS":
-            b3d_exe = Path(self.link) / "Blender" / "Blender.app"
-            args = f"open -W -n {b3d_exe.as_posix()} --args"
-
-        if blendfile is not None:
-            if isinstance(args, list):
-                args.append(blendfile.as_posix())
-            else:
-                args += f' "{blendfile.as_posix()}"'
-
-        if open_last:
-            if isinstance(args, list):
-                args.append("--open-last")
-            else:
-                args += " --open-last"
-
-        logger.debug("Running build with args %s", str(args))
-        proc = _popen(args)
-        assert proc is not None
         if self.observer is None:
             self.observer = Observer(self)
             self.observer.count_changed.connect(self.proc_count_changed)

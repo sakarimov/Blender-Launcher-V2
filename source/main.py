@@ -18,7 +18,7 @@ version = Version(
     2,
     1,
     24,
-    # prerelease="rc.1",
+    prerelease="rc.1",
 )
 
 _ = gettext.gettext
