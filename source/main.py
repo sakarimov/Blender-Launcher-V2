@@ -12,7 +12,7 @@ from pathlib import Path
 
 import modules._resources_rc
 from modules import argument_parsing as ap
-from modules._platform import _popen, get_cwd, get_launcher_name, get_platform, is_frozen
+from modules._platform import _popen, get_cache_path, get_cwd, get_launcher_name, get_platform, is_frozen
 from modules.build_info import parse_blender_ver, read_build_info
 from modules.settings import get_favorite_path, get_settings, get_worker_thread_count
 from modules.version_matcher import VersionMatcher, VersionSearch
@@ -21,15 +21,26 @@ from semver import Version
 from threads.library_drawer import DrawLibraryTask
 from windows.dialog_window import DialogWindow
 
-version = "2.0.24"
+version = Version(
+    2,
+    2,
+    0,
+    prerelease="rc.1",
+)
 
 _ = gettext.gettext
 
 # Setup logging config
 _format = "[%(asctime)s:%(levelname)s] %(message)s"
+cache_path = Path(get_cache_path())
+if not cache_path.is_dir():
+    cache_path.mkdir()
 logging.basicConfig(
     format=_format,
-    handlers=[logging.FileHandler(get_cwd() / "Blender Launcher.log"), logging.StreamHandler(stream=sys.stdout)],
+    handlers=[
+        logging.FileHandler(cache_path.absolute() / "Blender Launcher.log"),
+        logging.StreamHandler(stream=sys.stdout),
+    ],
 )
 logger = logging.getLogger(__name__)
 
@@ -107,7 +118,7 @@ def main():
     # Create an instance of application and set its core properties
     app = QApplication([])
     app.setStyle("Fusion")
-    app.setApplicationVersion(version)
+    app.setApplicationVersion(str(version))
 
     set_lib_folder: Path | None = args.set_library_folder
     if set_lib_folder is not None:
@@ -235,7 +246,7 @@ def start_launch(app: QApplication, file: Path | None, version: str | None):
         match = matcher.match(query)
         if not match:  # No match was made; check selectors
             query = selectors.get(ver)
-            if query is None: # Create window to make a selector
+            if query is None:  # Create window to make a selector
                 print("Create a selector...")
                 ...
             else:
@@ -254,7 +265,7 @@ def check_for_instance():
     socket.connectToServer("blender-launcher-server")
     is_running = socket.waitForConnected()
     if is_running:
-        socket.write(QByteArray(version.encode()))
+        socket.write(QByteArray(str(version).encode()))
         socket.waitForBytesWritten()
         socket.close()
         sys.exit()
